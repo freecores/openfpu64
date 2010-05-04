@@ -3,7 +3,7 @@ OpenFPU64
 Peter Hüwe
 V.0.1, Januar 2009, License: CC-by-sa
 :author initials: PH
-:email: peterhuewe@gmx.d
+:email: peterhuewe@gmx.de
 :license: CC-by-sa
 
 About OpenFPU64
@@ -20,7 +20,25 @@ The openFPU64 currently features:
 * Compatible with Avalon Bus
 * Wishbone interface will be provided soon
 
-The openFPU is tested with a Cyclone II and a CycloneIII fpga.
+The openFPU64 is tested with a Cyclone II and a CycloneIII fpga.
+
+
+Overview
+--------
+The openFPU64 consists of several parts:
+* openfpu64.vhd 	- contains the bus logic for the avalon bus, instantiate your own algorithms here
+* fpu_package.vhd 	- global constants and defines
+* fpu_add.vhd		- Add/Sub algorithms
+* fpu_mul.vhd		- Multiplication Algorithm with several embedded Multipliers
+* fpu_mul_single.vhd - Multiplication Algorithm with only one embedded Multiplier (currently in development, has some bugs)
+
+To use it in the NiosII environment you have to use the driver/library in
+* nios-driver
+
+The testbench needs also
+* openfpu64_tb.vhd 	- Testframework, consists of openfpu64_tb.head.vhd, openfpu64_tb.tail.vhd and the actual testcases which reside in tests/ (untar tests.tar.bz2)
+* eis_helpers.vhd	- some nice conversion functions for std_logic_vectors, provided by Prof. Dr. Gundolf Kiefer.
+
 
 Usage in QuartusII SOPC (tm)
 ----------------------------
@@ -81,4 +99,9 @@ Note:
 -----
 QuartusII, Nios, Cyclone, QuartusII SOPC Builders are registered Trademarks of Altera Corporation, 101 Innovation Drive, San Jose, California 95134, USA. All rights reserved.
 
+
+
+Todo:
+-----
+Of course there is still a lot to do, e.g. adding more documentation.
 Meanwhile, for questions contact me at peterhuewe@gmx.de and I'm glad to help you out
