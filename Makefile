@@ -21,6 +21,9 @@ work/%.o: %.vhd
 %: %.vhd work/%.o
 	$(GHDLE) $@
 
+empty_testsuite:
+	cat openfpu64_tb.head.vhd openfpu64_tb.tail.vhd > openfpu64_tb.vhd
+
 addsub_testsuite:
 	cat openfpu64_tb.head.vhd tests/openfpu64_tb.addsub.inc.vhd openfpu64_tb.tail.vhd > openfpu64_tb.vhd
 
