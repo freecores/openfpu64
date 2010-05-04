@@ -6,7 +6,7 @@ GHDLA:=$(GHDL) -a $(GHDLFLAGS)
 GHDLE:=$(GHDL) -e $(GHDLFLAGS)
 #prevent make from deleting the .o files
 .PRECIOUS: work/%.o
-all: clean work/eis_helpers.o work/fpu_package.o work/fpu_mul.o work/fpu_add.o work/simple.o openfpu64_tb
+all: clean work/eis_helpers.o work/fpu_package.o work/fpu_mul.o work/fpu_add.o openfpu64_tb
 	
 showme_%: %
 	./$< --wave=$<.ghw --stop-time=1ms
@@ -35,6 +35,11 @@ sub_testsuite:
 
 mul_testsuite:
 	cat openfpu64_tb.head.vhd tests/openfpu64_tb.mul.inc.txt openfpu64_tb.tail.vhd > openfpu64_tb.vhd
+
+quartus_distribution:
+	mkdir -p openfpu64_quartus
+	cp -f fpu_package.vhd fpu_add.vhd fpu_mul.vhd openfpu64.vhd openfpu64_hw.tcl gpl.txt openfpu64_quartus
+	@echo "Now copy the files in openfpu64_quartus to the root directory of your QuartusII(tm) project"
 
 clean:
 	$(GHDL) --clean --workdir=work
