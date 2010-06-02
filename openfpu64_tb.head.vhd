@@ -103,7 +103,7 @@ begin  -- openFPU64_tb
       wait for clk_period / 2;
       count := count+1;
     end procedure;
-  
+
   procedure testcase
     (
       number    : in integer;           -- Testcase number, will be reported
@@ -194,14 +194,38 @@ begin  -- openFPU64_tb
 -- Bus transfers complete
 
 -- compare actual result with expected result
-    assert data_out = expected report "doh "&integer'image(number)&" result was"&
-      " S:"&std_logic'image(data_out(63)) &
-      " E:"&to_string(data_out(62 downto 52)) &
-      " M:"&to_string(data_out(51 downto 0)) &
-      " expected" &
-      " S:"&std_logic'image(expected(63)) &
-      " E:"&to_string(expected(62 downto 52)) &
-      " M:"&to_string(expected(51 downto 0)) severity error;
+	if data_out /= expected
+	then
+	-- check if the _both_ expected and actual result is NaN,
+	-- if this is the case don't check the sign - NaNs don't have a sign
+	-- without this check false positives will be generated for NaNs with different signs.
+		if data_out(62 downto 52) = expected(62 downto 52)
+		and data_out(51 downto 0) = expected(51 downto 0)
+		and data_out(62 downto 52) = std_logic_vector(ONES(62 downto 52))
+		and data_out(51 downto 0) /= std_logic_vector(ZEROS(51 downto 0))
+		then
+			if DEBUG_MODE = '1' then -- if we are in DEBUG_MODE,print out the result anyway
+				assert false report "NaN:"&integer'image(number)&" result was"&
+				" S:"&std_logic'image(data_out(63)) &
+				" E:"&to_string(data_out(62 downto 52)) &
+				" M:"&to_string(data_out(51 downto 0)) &
+				" expected" &
+				" S:"&std_logic'image(expected(63)) &
+				" E:"&to_string(expected(62 downto 52)) &
+				" M:"&to_string(expected(51 downto 0)) severity error;
+			end if;
+		else
+		-- if we reach here, we have a real error - printout the actual and the expected result
+			assert false report "doh "&integer'image(number)&" result was"&
+			" S:"&std_logic'image(data_out(63)) &
+			" E:"&to_string(data_out(62 downto 52)) &
+			" M:"&to_string(data_out(51 downto 0)) &
+			" expected" &
+			" S:"&std_logic'image(expected(63)) &
+			" E:"&to_string(expected(62 downto 52)) &
+			" M:"&to_string(expected(51 downto 0)) severity error;
+		end if;
+	end if;
 -- print out statistics
     assert false report "Testcases "&integer'image(number)&" needed " &integer'image(i) &" cycles" severity note;
   end procedure;

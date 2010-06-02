@@ -46,5 +46,6 @@ package fpu_package is
   constant mode_div  : std_logic_vector (2 downto 0) := "011";  -- Division Mode
   constant mode_test : std_logic_vector (2 downto 0) := "111";  -- Testing Mode  
 
+  constant DEBUG_MODE : std_logic :='0';
 end fpu_package;
 
